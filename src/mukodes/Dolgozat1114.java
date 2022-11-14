@@ -86,7 +86,6 @@ public class Dolgozat1114 {
         menuBar.add(mnuJatekElrend);
         
         JMenuItem mnPrgUjra = new JMenuItem("Újra");
-        mnPrgUjra.addActionListener(new MnuUjraListener());
         mnuPrg.add(mnPrgUjra);
         
         mnuPrg.addSeparator();
@@ -281,12 +280,7 @@ public class Dolgozat1114 {
         
     }
     
-    class MnuUjraListener implements ActionListener{
-         @Override
-        public void actionPerformed(ActionEvent e) {
-            ujJatek();
-        }
-    }
+    
     
     class MnuKilepListener implements ActionListener{
         @Override
@@ -305,16 +299,6 @@ public class Dolgozat1114 {
         
     }
     
-//    class KeverListener implements ActionListener{
-//
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            if (isSele) {
-//                
-//            }
-//        }
-//        
-//    }
     
     /*Működéssel kapcsolatos tagfüggvények*/
     private void kilepes(){
