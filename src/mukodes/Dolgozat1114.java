@@ -1,23 +1,18 @@
 
 package mukodes;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
-import javax.swing.BoxLayout;
+import java.util.List;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -28,11 +23,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
@@ -45,10 +39,16 @@ public class Dolgozat1114 {
     /*Adattagok*/
     private JFrame frame;
     private static final int GOMB_DB = 10;
+    
+    private JButton gomb1, gomb2, gomb3, gomb4, gomb5, gomb6, gomb7, gomb8, gomb9, gomb0;
     private JButton[] gombok;
+    private JPanel pnlBal;
+    private JTextField szamokField;
+    private String kodsor= "";
     
     private static final int AMOBAGOMB_DB = 9;
     private JButton[] amobaGombok;
+    private JCheckBox keverCheck;
     /*Konstruktor*/
     public Dolgozat1114(){
         ini();
@@ -86,6 +86,7 @@ public class Dolgozat1114 {
         menuBar.add(mnuJatekElrend);
         
         JMenuItem mnPrgUjra = new JMenuItem("Újra");
+        mnPrgUjra.addActionListener(new MnuUjraListener());
         mnuPrg.add(mnPrgUjra);
         
         mnuPrg.addSeparator();
@@ -108,7 +109,7 @@ public class Dolgozat1114 {
         LayoutManager lymGridFrame = new GridLayout(1, 1);
         
         
-        JPanel pnlBal = pnlBalIni();
+        pnlBal = pnlBalIni();
         JPanel pnlJobb = pnlJobbIni();
         frame.getContentPane().add(pnlBal);
         frame.getContentPane().add(pnlJobb);
@@ -150,6 +151,7 @@ public class Dolgozat1114 {
     }
     
     private JPanel pnlJatekJobbIni(){
+        LayoutManager lymGridFrame = new GridLayout(3, 1);
         JPanel pnlJatekJobb = new JPanel();
         pnlJatekJobb.setBorder(new TitledBorder("Beállítás"));
         
@@ -159,17 +161,17 @@ public class Dolgozat1114 {
         csoport.add(radio1);
         csoport.add(radio2);
         
-        
-        DefaultListModel<String> lista = new DefaultListModel<>();
-        lista.addElement("3*3");
-        lista.addElement("4*4");
-        lista.addElement("5*5");
-        JList<String> list = new JList<>(lista);
-        JScrollPane scrollPane = new JScrollPane();
-        list.add(scrollPane);
+        JPanel pnl = new JPanel();
+        String lista[]={"3*3","4*4","5*5"};
+        JList list = new JList(lista);
+        list.add(pnl);
+        pnl.setBounds(0, 0,100,10);
+        JScrollPane scrollPane = new JScrollPane(pnl);
+        frame.getContentPane().add(scrollPane,BorderLayout.CENTER);
         pnlJatekJobb.add(list);
         pnlJatekJobb.add(radio1);
         pnlJatekJobb.add(radio2);
+        pnlJatekJobb.setLayout(lymGridFrame);
         return pnlJatekJobb;
     }
     
@@ -185,20 +187,12 @@ public class Dolgozat1114 {
     }
     
     private JPanel pnlJobbIni() {
-        LayoutManager lymGridFrame = new GridLayout(2, 1);
+        LayoutManager lymGridFrame = new GridLayout(3, 1);
         JPanel pnlJobb = new JPanel();
         pnlJobb.setBorder(new TitledBorder("Beállítás"));
-        JCheckBox keverCheck = new JCheckBox("kever", false);
+        keverCheck = new JCheckBox("kever");
+        keverCheck.addActionListener(new kever());
         pnlJobb.add(keverCheck);
-        
-        keverCheck.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED){
-                    kever();
-                }
-            }
-        });
     
         
         
@@ -206,9 +200,8 @@ public class Dolgozat1114 {
         
         pnlJobb.add(lbl);
         
-        JTextArea szamok = new JTextArea();
-        szamok.setBounds(50,50, 100, 20);
-        pnlJobb.add(szamok);
+        szamokField = new JTextField();
+        pnlJobb.add(szamokField);
         
         pnlJobb.setLayout(lymGridFrame);
         
@@ -279,7 +272,12 @@ public class Dolgozat1114 {
         }
         
     }
-    
+    class MnuUjraListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ujJatek();
+        }
+    }
     
     
     class MnuKilepListener implements ActionListener{
@@ -295,10 +293,52 @@ public class Dolgozat1114 {
         public void actionPerformed(ActionEvent e) {
             JButton gomb = (JButton)e.getSource();
             gomb.setBackground(Color.red);
+            String felirat = gomb.getActionCommand();
+            kodsor += felirat;
+            szamokField.setText(kodsor);
+            
         }
         
     }
     
+    class kever implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (keverCheck.isSelected()) {
+                System.out.println("igen csekkelt");
+                List<Integer> szamok = new ArrayList<>();
+                System.out.println("igen csekkelt");
+                for (int i = 0; i < GOMB_DB; i++) {
+                    szamok.add(i);
+                }
+                System.out.println("igen csekkelt");
+                Collections.shuffle(szamok);
+                System.out.println("igen csekkelt");
+                gombok[szamok.get(0)] = gomb1;
+                gombok[szamok.get(1)] = gomb2;
+                gombok[szamok.get(2)] = gomb3;
+                gombok[szamok.get(3)] = gomb4;
+                gombok[szamok.get(4)] = gomb5;
+                gombok[szamok.get(5)] = gomb6;
+                gombok[szamok.get(6)] = gomb7;
+                gombok[szamok.get(7)] = gomb8;
+                gombok[szamok.get(8)] = gomb9;
+                gombok[szamok.get(9)] = gomb0;
+                System.out.println(szamok.get(0));
+                System.out.println("igen csekkelt5");
+                gombBerak();
+                
+                System.out.println("igen csekkelt6");
+                frame.validate();
+            } else if(!(keverCheck.isSelected())){
+                for (JButton g : gombok) {
+                    pnlBal.remove(g);
+                }
+                gombokIni();
+            }
+        }
+    }
     
     /*Működéssel kapcsolatos tagfüggvények*/
     private void kilepes(){
@@ -308,20 +348,20 @@ public class Dolgozat1114 {
         }
     }
     
-    private void layoutGombok(){
-        pnlBalIni().removeAll();
-        for (JButton gomb : gombok) {
-            pnlBalIni().add(gomb);
-        }
-        pnlBalIni().revalidate();
-        pnlBalIni().repaint();
+    private void ujJatek(){
+        szamokField.setText("");
+        pnlBal.removeAll();
+        gombokIni();
+        keverCheck.setSelected(false);
+        frame.validate();
     }
     
-    private void kever(){
-        if (gombok != null) {
-            Collections.shuffle(Arrays.asList(gombok));
-        }
+    private void gombBerak(){
+        for (JButton g : gombok) {
+                    pnlBal.add(g);
+                }
     }
+    
     
    
 }
